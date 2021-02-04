@@ -1,6 +1,7 @@
-export const funcParams = 'data, theme, echartsInstance, echarts';
+export const funcParams = 'data, theme, echartsInstance, echarts, xAxisData';
 
-const funcBody = `const series = data.series.map((s) => {
+const funcBody = `
+const series = data.series.map((s) => {
   const sData = s.fields.find((f) => f.type === 'number').values.buffer;
   const sTime = s.fields.find((f) => f.type === 'time').values.buffer;
 
@@ -49,9 +50,6 @@ return {
     },
   },
   xAxis: Object.assign(
-    {
-      type: 'time',
-    },
     axisOption
   ),
   yAxis: Object.assign(

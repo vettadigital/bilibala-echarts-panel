@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { PanelProps, GrafanaTheme } from '@grafana/data';
 import { withTheme } from '@grafana/ui';
 import { debounce } from 'lodash';
-import echarts from 'echarts';
+import * as echarts from 'echarts';
 import { css, cx } from 'emotion';
 import { SimpleOptions, funcParams } from 'types';
 
@@ -44,11 +44,69 @@ interface Props extends PanelProps<SimpleOptions> {
   theme: GrafanaTheme;
 }
 
-const PartialSimplePanel: React.FC<Props> = ({ options, data, width, height, theme }) => {
+const MONTHS = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+const DAYS = [
+  '1',
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '8',
+  '9',
+  '10',
+  '11',
+  '12',
+  '13',
+  '14',
+  '15',
+  '16',
+  '17',
+  '18',
+  '19',
+  '20',
+  '21',
+  '22',
+  '23',
+  '24',
+  '25',
+  '26',
+  '27',
+  '28',
+  '29',
+  '30',
+  '31',
+];
+
+const setXAxisData = (deltaT: string, resample: string) => {
+  const WEEKS = [] as string[];
+  for (let week = 1; week <= (deltaT === 'y' ? 53 : 5); week++) {
+    WEEKS.push(`${week}ª`);
+  }
+  switch (deltaT) {
+    case 'y':
+      if (resample === '1M') return MONTHS;
+      if (resample === '1w') return WEEKS;
+      break;
+    case 'M':
+      if (resample === '1w') return WEEKS;
+      if (resample === '1d') return DAYS;
+      break;
+  }
+  return [] as string[];
+};
+
+const PartialSimplePanel: React.FC<Props> = ({ options, replaceVariables, data, width, height, theme }) => {
   const styles = getStyles();
   const echartRef = useRef<HTMLDivElement>(null);
   const [chart, setChart] = useState<echarts.ECharts>();
   const [tips, setTips] = useState<Error | undefined>();
+
+  const deltaT = replaceVariables('$deltaT');
+  const resample = replaceVariables('$resample');
+
+  const xAxisData = setXAxisData(deltaT, resample);
 
   const resetOption = debounce(
     () => {
@@ -62,7 +120,7 @@ const PartialSimplePanel: React.FC<Props> = ({ options, data, width, height, the
         setTips(undefined);
         chart.clear();
         let getOption = new Function(funcParams, options.getOption);
-        const o = getOption(data, theme, chart, echarts);
+        const o = getOption(data, theme, chart, echarts, xAxisData);
         o && chart.setOption(o);
       } catch (err) {
         console.error('Editor content error!', err);
