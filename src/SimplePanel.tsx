@@ -79,12 +79,12 @@ const DAYS = [
   '31',
 ];
 
-const setXAxisData = (deltaT: string, resample: string) => {
+const setXAxisData = (scale: string, resample: string) => {
   const WEEKS = [] as string[];
-  for (let week = 1; week <= (deltaT === 'y' ? 53 : 5); week++) {
+  for (let week = 1; week <= (scale === 'y' ? 53 : 5); week++) {
     WEEKS.push(`${week}ª`);
   }
-  switch (deltaT) {
+  switch (scale) {
     case 'y':
       if (resample === '1M') return MONTHS;
       if (resample === '1w') return WEEKS;
@@ -103,10 +103,10 @@ const PartialSimplePanel: React.FC<Props> = ({ options, replaceVariables, data, 
   const [chart, setChart] = useState<echarts.ECharts>();
   const [tips, setTips] = useState<Error | undefined>();
 
-  const deltaT = replaceVariables('$deltaT');
+  const scale = replaceVariables('$scale');
   const resample = replaceVariables('$resample');
 
-  const xAxisData = setXAxisData(deltaT, resample);
+  const xAxisData = setXAxisData(scale, resample);
 
   const resetOption = debounce(
     () => {
