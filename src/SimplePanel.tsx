@@ -86,7 +86,7 @@ const setXAxisData = (scale: string, resample: string) => {
   }
   switch (scale) {
     case 'y':
-      if (resample === '30d') return MONTHS;
+      if (resample === '1M') return MONTHS;
       if (resample === '1w') return WEEKS;
       break;
     case 'M':
