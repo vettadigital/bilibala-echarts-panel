@@ -6,11 +6,6 @@ import * as echarts from 'echarts';
 import { css, cx } from 'emotion';
 import { SimpleOptions, funcParams } from 'types';
 
-// just comment it if don't need it
-/* import 'echarts-wordcloud';
-import 'echarts-liquidfill';
-import 'echarts-gl'; */
-
 // auto register map
 const maps = (require as any).context('./map', false, /\.json/);
 maps.keys().map((m: string) => {
