@@ -5,6 +5,8 @@ import { debounce } from 'lodash';
 import * as echarts from 'echarts';
 import { css, cx } from 'emotion';
 import { SimpleOptions, funcParams } from 'types';
+import './assets/themes/darkNight.js';
+import './assets/themes/lightNight.js';
 
 // auto register map
 const maps = (require as any).context('./map', false, /\.json/);
@@ -130,7 +132,7 @@ const PartialSimplePanel: React.FC<Props> = ({ options, replaceVariables, data, 
     if (echartRef.current) {
       chart?.clear();
       chart?.dispose();
-      setChart(echarts.init(echartRef.current, options.followTheme ? theme.type : undefined));
+      setChart(echarts.init(echartRef.current, options.followTheme ? theme.type : options.themePicker));
     }
 
     return () => {
@@ -138,7 +140,7 @@ const PartialSimplePanel: React.FC<Props> = ({ options, replaceVariables, data, 
       chart?.dispose();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [echartRef.current, options.followTheme]);
+  }, [echartRef.current, options.followTheme, options.themePicker]);
 
   useEffect(() => {
     chart?.resize();

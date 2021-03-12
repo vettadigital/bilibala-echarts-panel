@@ -22,6 +22,19 @@ if (!PanelPlugin) {
         description: 'Use default theme or follow theme of grafana (light or dark).',
         defaultValue: defaults.followTheme,
       })
+      .addSelect({
+        path: 'themePicker',
+        name: 'Theme',
+        description: 'Choose a theme of your preference.',
+        defaultValue: defaults.themePicker,
+        settings: {
+          options: [
+            {label: 'Night Dark', value: 'darkNight'},
+            {label: 'Night Light', value: 'lightNight'}
+          ]
+        },
+        showIf: (currentConfig) => !currentConfig.followTheme,
+      })
       .addCustomEditor({
         id: 'getOption',
         path: 'getOption',

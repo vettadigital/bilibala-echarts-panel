@@ -79,9 +79,11 @@ return {
 export interface SimpleOptions {
   followTheme: boolean;
   getOption: string;
+  themePicker: string;
 }
 
 export const defaults: SimpleOptions = {
   followTheme: false,
   getOption: funcBody,
+  themePicker: 'lightNight'
 };
